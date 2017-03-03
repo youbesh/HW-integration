@@ -2,7 +2,9 @@
 
 module IntTest
 	using HW_int
-	using FactCheck
+	using Base.Test
+
+	@test 1==1
 
 
 	
