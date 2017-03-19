@@ -8,9 +8,9 @@ module HW_int
 using FastGaussQuadrature
 using Roots
 using Sobol
-using PyPlot
 using Distributions
 using DataFrames
+using Plots
 
 # here are some functions I defined for useage
 # in several sub questions
@@ -27,15 +27,25 @@ using DataFrames
 
 
 function question_1b(n)
-3*sum(gausslegendre(n)[2][i]*(1.5*gausslegendre(n)[1][i]+2.5)^(-0.5) for i=1:n)
+gl = 3*sum(gausslegendre(n)[2][i]*(1.5*gausslegendre(n)[1][i]+2.5)^(-0.5) for i=1:n)
+println(gl)
+q(p) = 2*(p^(-0.5))
+plb = plot(q,0,5)
+pts = 3 * gausslegendre(n)[1] / 2 + 5/2
+scatter!(q, pts)
 end
+
 
 function question_1c(n)
 A = Float64[]
 for i=1:n
 push!(A, 1+rand()*3)
 end
-3*(1/n)*sum(2*(A[i])^(-0.5) for i=1:n)
+MC = 3*(1/n)*sum(2*(A[i])^(-0.5) for i=1:n)
+println(MC)
+q(p) = 2*(p^(-0.5))
+plc = plot(q,0,5)
+scatter!(q, A)
 end
 
 function question_1d(n)
@@ -44,8 +54,13 @@ B = []
 for i=1:n
 push!(B, 1+(next(s))*3)
 end
-3*(2/n)*sum((B[i][1])^(-0.5) for i=1:n)
+QMC = 3*(2/n)*sum((B[i][1])^(-0.5) for i=1:n)
+println(QMC)
+q(p) = 2*(p^(-0.5))
+pld = plot(q,0,5)
+scatter!(q, B)
 end
+
 
 function question_2a(n)
 sigma = [0.01 0.01; 0.01 0.02]
@@ -87,8 +102,6 @@ mc_est = [exp2_p; var2_p]
 end
 
 
-
-# function to run all questions
 function runall(n)
 println("running all questions of HW-integration:")
 println("results of question 1")
@@ -111,5 +124,4 @@ println("Question 2b")
 println(q2b)
 println("end of HW-integration")
 end
-
 end
