@@ -1,10 +1,6 @@
 
 module HW_int
 
-
-# question 1 b)
-# here are the packages I used
-
 using FastGaussQuadrature
 using Roots
 using Sobol
@@ -24,15 +20,18 @@ using Plots
 
 
 # weighted sum for integration from the slides.
+#println(gl)
 
 
 function question_1b(n)
 gl = 3*sum(gausslegendre(n)[2][i]*(1.5*gausslegendre(n)[1][i]+2.5)^(-0.5) for i=1:n)
-println(gl)
 q(p) = 2*(p^(-0.5))
-plb = plot(q,0,5)
+plb = plot(q,0,5, title="Gauss Legendre")
 pts = 3 * gausslegendre(n)[1] / 2 + 5/2
-scatter!(q, pts)
+scatter!(q, pts, label="Integration nodes values")
+println(gl)
+display(plb)
+return gl
 end
 
 
@@ -42,10 +41,13 @@ for i=1:n
 push!(A, 1+rand()*3)
 end
 MC = 3*(1/n)*sum(2*(A[i])^(-0.5) for i=1:n)
-println(MC)
+#println(MC)
 q(p) = 2*(p^(-0.5))
-plc = plot(q,0,5)
-scatter!(q, A)
+plc = plot(q,0,5, title="Monte Carlo")
+scatter!(q, A, label="Integration nodes values")
+println(MC)
+display(plc)
+return MC
 end
 
 function question_1d(n)
@@ -55,10 +57,12 @@ for i=1:n
 push!(B, 1+(next(s))*3)
 end
 QMC = 3*(2/n)*sum((B[i][1])^(-0.5) for i=1:n)
-println(QMC)
 q(p) = 2*(p^(-0.5))
-pld = plot(q,0,5)
+pld = plot(q,0,5, title="Quasi Monte Carlo")
 scatter!(q, B)
+println(QMC)
+display(pld)
+return QMC
 end
 
 
@@ -102,18 +106,15 @@ mc_est = [exp2_p; var2_p]
 end
 
 
-function runall(n)
-println("running all questions of HW-integration:")
+function runall(n=10)
+println("running all questions of HW-integration, n=10:")
 println("results of question 1")
-q1b = question_1b(n) # make sure your function prints some kind of result!
-q1c = question_1c(n)
-q1d = question_1d(n)
 println("Question 1b")
-println(q1b)
+question_1b(n)
 println("Question 1c")
-println(q1c)
+question_1c(n)
 println("Question 1d")
-println(q1d)
+question_1d(n)
 println("")
 println("results of question 2 (expectation, variance):")
 q2 = question_2a(n)
